@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // ALTERADO – R4: registra o APELIDO 'vendedor' para o nosso middleware.
+        // É isso que permite escrever Route::middleware('vendedor') em
+        // routes/web.php. Sem este registro aparece o erro
+        // "Target class [vendedor] does not exist".
         //
+        // Atenção: este é o bootstrap/app.php. NÃO confundir com config/app.php,
+        // que guarda configurações (nome, fuso, idioma) e não deve ser mexido.
+        $middleware->alias([
+            'vendedor' => \App\Http\Middleware\VendedorMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
